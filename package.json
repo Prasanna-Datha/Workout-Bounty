@@ -1,0 +1,17 @@
+{
+  "name": "workoutbounty",
+  "version": "1.0.0",
+  "description": "Admin side application for managing gym facilities and thier details.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "Prasanna Datha, Vikram T",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.7",
+    "pug": "^2.0.0-rc.3"
+  }
+}
