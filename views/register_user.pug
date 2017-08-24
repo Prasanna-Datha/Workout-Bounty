@@ -1,37 +1,38 @@
 extends main_layout
 block content
+  h3 #{title}
   .col-md-10.col-md-offset-1
-    form(method='POST', action='/register/user')
+    form(method='POST', action='/users/register')
       .col-md-6
         fieldset
           legend Personal Details
           #form-group
             label.control-label First Name:
-            input.form-control(type='text', name="firstname", required='required')
+            input.form-control(type='text', name="firstname")
           #form-group
             label.control-label Middle Name
             input.form-control(type='text', name="middlename")
           #form-group
             label.control-label Last Name
-            input.form-control(type='text', name='lastname', required='required')
+            input.form-control(type='text', name='lastname')
           #form-group
             label.control-label Email
             input.form-control(type='email', name='email')
           #form-group
             label.control-label Mobile Number
-            input.form-control(type='number',name='mobilenumber', required='required')
+            input.form-control(type='number',name='mobilenumber')
       .col-md-6
         fieldset
           legend Login Details
           #form-group
             label.control-label Username
-            input.form-control(type='text', name='username', required='required')
+            input.form-control(type='text', name='username')
           #form-group
             label.control-label Password
-            input.form-control(type='password',name='password', required='required')
+            input.form-control(type='password',name='password')
           #form-group
             label.control-label Re-enter Password
-            input.form-control(type='password', name='reenterpass', required='required')        
+            input.form-control(type='password', name='reenterpass')        
           br
           #form-group
             input(type='checkbox', name='agreement') 

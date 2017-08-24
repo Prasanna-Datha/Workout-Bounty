@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 // Init app database
 mongoose.connect('mongodb://localhost/workoutbounty');
@@ -14,7 +17,7 @@ db.once('open',()=>{
 
 //Check db errors
 db.on('error',(err)=>{
-  coonsole.log(err);
+  console.log(err);
 });
 
 // Init App
@@ -37,6 +40,38 @@ app.use(express.static(path.join(__dirname,'public')));
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','pug');
 
+// Express Sesion Middleware
+app.use(session({
+  secret: 'keyboard cat',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
 //Home Route
 app.get('/',(req,res)=>{
   User.find({},(err,users)=>{
@@ -54,42 +89,9 @@ app.get('/',(req,res)=>{
 
 });
 
-// Register New User Route
-app.get('/register/user',(req,res)=>{
-  res.render('register_user',{
-    title:'Register User'
-  });
-});
-
-// Get user details Route
-app.get('/user/:id',(req,res)=>{
-  User.findById(req.params.id,(err,user)=>{
-    res.render('user',{
-      user:user
-    });
-  });
-});
-
-app.post('/register/user',(req,res)=>{
-  let user = new User();
-  user.firstname = req.body.firstname;
-  user.middlename = req.body.middlename;
-  user.lastname = req.body.lastname;
-  user.email = req.body.email;
-  user.mobile_number = req.body.mobilenumber;
-  user.password = req.body.password;
-  user.username = req.body.username;
-
-  user.save((err)=>{
-    if(err){
-      console.log(err);
-      return;
-    }else{
-      res.redirect('/');
-    }
-  });
-  return;
-});
+// Route Files
+let users = require('./routes/users');
+app.use('/users',users);
 
 //Start Server
 app.listen(port,()=>{
