@@ -5,9 +5,11 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
+const dbConfig = require('./config/database');
 
 // Init app database
-mongoose.connect('mongodb://localhost/workoutbounty');
+mongoose.connect(dbConfig.database);
 let db = mongoose.connection;
 
 //Check db connection
@@ -72,21 +74,22 @@ app.use(expressValidator({
   }
 }));
 
+//Passport config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*',(req,res,next)=>{
+  res.locals.user = req.user || null;
+  next();
+})
+
 //Home Route
 app.get('/',(req,res)=>{
-  User.find({},(err,users)=>{
-    if(err){
-      console.log(err);
-    }
-    else{
-      res.render('index',{
-        title:'Workout Bounty - Home',
-        users: users
-      });
-    }
+  res.render('index',{
+    title:'Workout Bounty - Home'
   });
-
-
 });
 
 // Route Files

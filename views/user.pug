@@ -5,5 +5,6 @@ block content
   h4= user.email
   h4= user.mobile_number
   hr
-  a.btn.btn-default(href='/users/edit/'+user._id) Edit
-  a.btn.btn-danger.delete-user(href='#', data-id=user._id) Delete
+    if user
+      a.btn.btn-default(href='/users/edit/'+user._id) Edit
+      a.btn.btn-danger.delete-user(href='#', data-id=user._id) Delete
